@@ -1,6 +1,8 @@
 'use strict'
 
+//Para crear rutas
 var express = require('express');
+
 var UserController= require('../controllers/user');
 var md_auth= require('../middlewares/authenticated');
 
@@ -14,7 +16,10 @@ var router= express.Router();
 //Rutas de usurios
 router.post('/register', UserController.save);
 router.post('/login', UserController.login);
-router.post('/upload/:id',UserController.uploadAvatar);
+router.post('/upload',[md_auth.authenticated , md_upload],UserController.uploadAvatar);
 router.put('/update',md_auth.authenticated,UserController.update);
+router.get('/avatar/:fileName',UserController.avatar);
+router.get('/users/',UserController.getUsers);
+router.get('/user/:userId',UserController.getUser);
 
 module.exports= router;

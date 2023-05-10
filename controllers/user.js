@@ -3,6 +3,8 @@
 var validator = require('validator');
 var User = require('../models/user');
 var bcrypt = require('bcrypt-nodejs');
+var fs = require('fs');
+var path = require('path');
 var jwt = require('../services/jwt');
 //creamos el controlador
 var controller = {
@@ -198,9 +200,9 @@ var controller = {
                 }
 
             })
-        }else{
-               //Buscar y actualizar el documento
-               User.findOneAndUpdate({ _id: userId }, params, { new: true }, (err, userUpdted) => {
+        } else {
+            //Buscar y actualizar el documento
+            User.findOneAndUpdate({ _id: userId }, params, { new: true }, (err, userUpdted) => {
                 if (err) {
                     return res.status(404).send({
                         status: 'error',
@@ -228,12 +230,113 @@ var controller = {
 
 
     uploadAvatar: function (req, res) {
-        return res.status(404).send({
-            status: 'succes',
-            message: 'metodo upload'
+
+        //Comprobamos que se sube el archivo
+        if (!req.files) {
+            return res.status(404).send({
+                status: 'error',
+                message: 'El avatar no se a subido...'
+            })
+        }
+        //Conseguir el nombre y la extension del archivo
+        var file_path = req.files.file0.path;
+        var file_split = file_path.split('\\');
+        var file_name = file_split[2];
+
+        var ext_explit = file_name.split('\.');
+        var file_exp = ext_explit[1];
+
+        if (file_exp != 'jpg' && file_exp != 'png' && file_exp != 'gif' && file_exp != 'jpeg') {
+         fs.unlink(file_path, (err)=>{
+            return res.status(404).send({
+                status: 'error',
+                message: 'La extension del archivo no es valida'
+            })
+         });
+        }else{
+            //Sacar  el id del usuario
+            var userId= req.user.sub;
+            //Buscar y actualizar el documento en la base de datos
+            User.findOneAndUpdate({_id: userId}, {image:file_name}, {new:true},(err,userUpdted)=>{
+                if(err || !userUpdted){
+                    return res.status(404).send({
+                        status: 'error',
+                        message: 'No se pudo actualizar la imagen'
+                    })
+                }else{
+                    return res.status(200).send({
+                        status: 'succes',
+                        message: 'La imagen se a actualizado correctamente',
+                        user:userUpdted
+                    })
+                }
+
+            });
+
+
+
+        }
+    },
+    avatar:function(req,res){
+        var fileName= req.params.fileName;
+        var pathFile= './uploads/users/'+fileName;
+        
+        if(fs.existsSync(pathFile)){
+                return res.sendFile(path.resolve(pathFile))
+            }else{
+                return res.status(404).send({
+                    status: 'error',
+                    message: 'La imagen no existe'
+                });
+            }
+        
+    
+    
+    },
+
+
+    getUsers:function(req,res){
+        User.find().exec((err,users)=>{
+            if(err ||!users){
+                return res.status(404).send({
+                    status: 'error',
+                    message: 'No hay usuarios'
+                });
+            }else{
+                return res.status(200).send({
+                    status:'success',
+                    users
+                })
+            }
         })
+    },
+    getUser:function(req,res){
+        var userId = req.params.userId;
+
+        User.findById(userId).exec((err,user)=>{
+            if(err ||!user){
+                return res.status(404).send({
+                    status: 'error',
+                    message: 'No existe el usuario'
+                });
+            }else{
+                return res.status(200).send({
+                    status:'success',
+                    user
+                })
+            }
+        });
+
     }
+
+
+
+
 }
+
+
+
+
 //exportamos el controlador para usar las funciones
 module.exports = controller;
 
