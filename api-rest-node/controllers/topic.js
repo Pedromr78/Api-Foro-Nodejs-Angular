@@ -1,12 +1,7 @@
 'use strict'
 
 var validator = require('validator');
-var User = require('../models/user');
 var Topic = require('../models/topic');
-var bcrypt = require('bcrypt-nodejs');
-var fs = require('fs');
-var path = require('path');
-var jwt = require('../services/jwt');
 //creamos el controlador
 var controller = {
 
@@ -267,6 +262,40 @@ var controller = {
                 })
               
             }
+        })
+    },
+    search :function(req,res){
+        var searchString= req.params.search;
+
+        Topic.find({"$or":[
+            {"title":{"$regex":searchString,"$options":"i"}},
+            {"content":{"$regex":searchString,"$options":"i"}},
+            {"lang":{"$regex":searchString,"$options":"i"}},
+            {"code":{"$regex":searchString,"$options":"i"}}
+        ]
+        })
+        .sort([['date', 'descending']])
+        .exec((err,topics)=>{
+            if(err){
+                return res.status(500).send({
+                    status: 'error',
+                    mensage: 'Error en la peticion',
+
+                })
+            }
+            if(!topics){
+                return res.status(404).send({
+                    status: 'error',
+                    mensage: 'No hay topics disponibles',
+
+                })
+            }
+            return res.status(200).send({
+                status: 'success',
+                topics
+
+            })
+
         })
     }
 }

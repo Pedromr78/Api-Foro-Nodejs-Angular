@@ -21,8 +21,7 @@ var TopicSchema = Schema({
     lang: String,
     date: { type: Date, default: Date.now },
     user: { type: Schema.ObjectId, ref: 'User' },
-    // comments: [CommentsSchema]
-
+    comments:[CommentsSchema]
 });
 
 //Cargar paginacion
