@@ -191,7 +191,7 @@ var controller = {
                         }
 
 
-                        return res.status(404).send({
+                        return res.status(200).send({
                             status: 'succes',
                             message: 'El usuario se a actualizado',
                             user: userUpdted
@@ -217,7 +217,7 @@ var controller = {
                 }
 
 
-                return res.status(404).send({
+                return res.status(200).send({
                     status: 'succes',
                     message: 'El usuario se a actualizado',
                     user: userUpdted
@@ -232,14 +232,15 @@ var controller = {
     uploadAvatar: function (req, res) {
 
         //Comprobamos que se sube el archivo
-        if (!req.files) {
+        if (!req.file) {
             return res.status(404).send({
                 status: 'error',
                 message: 'El avatar no se a subido...'
             })
         }
+        console.log(req.file)
         //Conseguir el nombre y la extension del archivo
-        var file_path = req.files.file0.path;
+        var file_path = req.file.path;
         var file_split = file_path.split('\\');
         var file_name = file_split[2];
 

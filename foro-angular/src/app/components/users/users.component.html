@@ -1,0 +1,31 @@
+<div class="col-lg-10 mx-auto mt-5">
+   
+    <h3 class="text-center">{{page_title}}</h3>
+    <hr>
+
+    <ul class="list-group">
+        <li class="list-group-item" *ngFor="let user of users">
+            <div class="avatar_mask float-start me-4"  *ngIf="user.image != null">
+                 
+                <img src="{{url+'avatar/'+ user.image}}" class="avatar-nav">
+              
+              </div>
+              <div class="avatar_mask float-start me-4"  *ngIf="user.image == null">
+               
+                <img src="./assets/defect.png" class="avatar-nav">
+              
+              </div>
+            <h4>
+                <a [routerLink]="['/perfil', user._id]">{{user.name + ' '+user.surname}}</a>
+            </h4>
+            
+            <a [routerLink]="['/perfil', user._id]" class="btn btn-sm btn-success float-start mx-auto d-block">Ver Perfil</a>
+        </li>
+       
+      </ul>
+      <div class="clearfix"></div>
+
+   
+      
+
+</div>

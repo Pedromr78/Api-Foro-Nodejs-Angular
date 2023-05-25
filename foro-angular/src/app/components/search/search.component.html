@@ -1,0 +1,25 @@
+<div class="col-lg-10 mx-auto mt-5">
+   
+    <h3 class="text-center">{{page_title}}</h3>
+    <hr>
+
+    <ul class="list-group">
+        <li class="list-group-item" *ngFor="let topic of topics">
+            <h4>
+                <a [routerLink]="['/tema', topic._id]">{{topic.title}}</a>
+            </h4>
+            <span class="badge bg-primary">
+                {{topic.user.name + ' ' + topic.user.surname}}
+            </span>
+            <span class="badge bg-light text-dark">
+                {{topic.date | amLocale: 'es' | amTimeAgo}}
+            </span>
+            <a [routerLink]="['/tema', topic._id]" class="btn btn-sm btn-success float-end mx-auto d-block">Leer</a>
+        </li>
+       
+      </ul>
+      <div class="clearfix"></div>
+
+   
+
+</div>

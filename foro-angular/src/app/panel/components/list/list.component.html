@@ -1,0 +1,53 @@
+<div class="col-lg-12">
+    <h3>{{page_title}}</h3>
+    <hr>
+
+    <table class="table table-hover">
+        <thead class="thead-default">
+            <tr>
+                <th>Titulo</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let topic of topics">
+                <td>{{topic.title}}</td>
+                <td>{{topic.date | amLocale:'es' | amDateFormat:'LL'}}</td>
+                <td>
+                  
+                    <a [routerLink]="['/panel/editar',topic._id]" class="btn btn-sm btn-warning me-2">Editar</a>
+                   
+                    <a [routerLink]="['/tema', topic._id]" class="btn btn-sm btn-success me-2">Leer</a>
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" [attr.data-bs-target]="'#modal'+topic._id">
+                        Borrar
+                    </button>
+                
+
+                    <!-- Modal -->
+                   
+                    <div class="modal fade" id="{{'modal'+topic._id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">BORRAR TEMA</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                ¿Desea borrar el Tema "{{topic.title}}"?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <a (click)="deleteTopic(topic._id)" type="button" class="btn btn-danger" data-bs-dismiss="modal">Borrar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

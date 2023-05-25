@@ -1,0 +1,73 @@
+<div class="col-lg-12 topic-box mt-5 " *ngIf="topic">
+    <div class="topic-data col-lg-6 mx-auto">
+        <h1>{{topic.title}}</h1>
+        <span class="badge bg-warning me-2" *ngIf="topic.lang">
+            {{topic.lang}}
+        </span>
+        <span class="badge bg-primary me-2">
+            {{topic.user.name + ' ' + topic.user.surname}}
+        </span>
+        <span class="badge bg-light text-dark me-2">
+            {{topic.date | amLocale: 'es' | amTimeAgo}}
+        </span>
+        <p>
+            {{topic.content}}
+        </p>
+        <p ng-if="topic.code">
+            <ngx-highlight-js lang="{{topic.lang}}" code="{{topic.code}}"></ngx-highlight-js>
+        </p>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-lg-6 mx-auto mt-4">
+        <h3>Comentarios</h3>
+        <hr>
+       
+        
+        <div class="alert alert-success raw" *ngIf="status == 'succes'">
+            El comentario se a guardado correctamente
+        </div>
+        <div class="alert alert-danger raw" *ngIf="status == 'error'">
+            El comentario no se a guardado correctamente, vuelve a intentarlo.
+        </div>
+        <form #formComment="ngForm" (ngSubmit)="onSubmit(formComment)" *ngIf="identity">
+            <div class="form-group">
+                <label for="content">Pon tu Comentario</label>
+                <textarea type="text" name="content" class="form-control" #content="ngModel" [(ngModel)]="comment.content" ></textarea>
+    
+               
+            </div>
+            <input type="submit" value="Comentar" class="btn btn-success mt-3" [disabled]="formComment.invalid">
+        </form>
+        <hr *ngIf="identity">
+      
+        <ul class="list-group mt-4">
+            <li class="list-group-item" *ngFor="let comment of comments">
+                <button  class="btn btn-sm btn-danger  float-end mt-3 d-block" (click)="delete(comment._id)" *ngIf="identity && identity._id == comment.user._id ">Borrar</button>
+                <div class="avatar_mask float-start  me-4"  *ngIf="comment.user.image != null">
+                 
+                    <img src="{{url+'avatar/'+ comment.user.image}}" class="avatar-nav">
+                  
+                  </div>
+                  <div class="avatar_mask float-start  me-4"  *ngIf="comment.user.image == null">
+                   
+                    <img src="./assets/defect.png" class="avatar-nav">
+                  
+                  </div>
+                  
+                <span class="badge bg-primary me-2">
+                 
+                    {{comment.user.name + ' ' + comment.user.surname}}
+                </span>
+                <span class="badge bg-light text-dark me-2">
+                    {{comment.date | amLocale: 'es' | amTimeAgo}}
+                </span>
+                <div class="clearfix"></div>
+              
+               <span class="d-sm-block">  {{comment.content}}</span>
+            
+               
+                
+            </li>
+        </ul>
+    </div>
+</div>

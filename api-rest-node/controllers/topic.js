@@ -146,6 +146,7 @@ var controller = {
         Topic.findById(topicId)
             //Para meter en la propiedad usuario el usuario con todos los datos
             .populate('user')
+            .populate('comments.user')
             .exec((err, topic) => {
                 if (err) {
                     return res.status(400).send({
@@ -274,6 +275,7 @@ var controller = {
             {"code":{"$regex":searchString,"$options":"i"}}
         ]
         })
+        .populate('user')
         .sort([['date', 'descending']])
         .exec((err,topics)=>{
             if(err){
